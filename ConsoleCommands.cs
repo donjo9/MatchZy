@@ -407,8 +407,10 @@ namespace MatchZy
                 
                 if (isPlayOutEnabled) {
                     Server.ExecuteCommand("mp_match_can_clinch false");
+                    Server.ExecuteCommand("mp_overtime_enable 0");
                 } else {
                     Server.ExecuteCommand("mp_match_can_clinch true");
+                    Server.ExecuteCommand("mp_overtime_enable 1");
                 }
                 
             } else {
