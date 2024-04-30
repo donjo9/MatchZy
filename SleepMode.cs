@@ -16,6 +16,7 @@ namespace MatchZy
             if (matchStarted) return;
             isSleep = true;
             isPractice = false;
+            isDryRun = false;
             isWarmup = false;
             readyAvailable = false;
             matchStarted = false;
@@ -49,7 +50,8 @@ namespace MatchZy
 
             if (matchStarted)
             {
-                ReplyToUserCommand(player, "Sleep Mode cannot be started when a match has been started!");
+                // ReplyToUserCommand(player, "Sleep Mode cannot be started when a match has been started!");
+                ReplyToUserCommand(player, Localizer["matchzy.sleep.sleepwhenmatchstared"]);
                 return;
             }
             StartSleepMode();

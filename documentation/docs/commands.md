@@ -3,6 +3,7 @@ Most of the commands can also be used using ! prefix instead of . (like !ready)
 
 - `.ready` Marks the player ready
 - `.unready` Marks the player unready
+- `.forceready` Force-readies the player's team (Only works when using Match setup using JSON/Get5)
 - `.pause` Pauses the match in freezetime (Tactical or normal pause, depends on `matchzy_use_pause_command_for_tactical_pause`).
 - `.tech` Pauses the match in freezetime.
 - `.unpause` Request for unpausing the match. Both teams need to type .unpause to unpause the match
@@ -26,12 +27,27 @@ Most of the commands can also be used using ! prefix instead of . (like !ready)
 - `.nobots` Removes all the bots
 - `.clear` Clears all the active smokes, molotoves and incendiaries
 - `.fastforward` Fastforwards the server time to 20 seconds
+- `.noflash` Toggles immunity for flashbang (it will still blind others with noflash disabled)
+- `.dryrun` Turns on dry-run mode
 - `.god` Turns on god mode
 - `.savenade <name> <optional description>` Saves a lineup
 - `.loadnade <name>` Loads a lineup
 - `.deletenade <name>` Deletes a lineup from file
 - `.importnade <code>` Upon saving a lineup a code will be printed to chat, alternatively those can be retrieved from the savednades.cfg
 - `.listnades <optional filter>` Lists either all saved lineups ever or if given a filter only those that match the filter
+- `.break` Breaks all the breakable entities (glass windows, wooden doors, vents, etc)
+- `.rethrow` Rethrows your last thrown grenade
+- `.timer` Starts a timer immediately and stops it when you type .timer again, telling you the duration of time
+- `.last` Teleports you back to where you threw your last grenade from
+- `.back <number>` Teleports you back to the provided position in your grenade history
+- `.delay <delay_in_seconds>` Sets a delay on your last grenade. This is only used when using .rethrow or .throwindex
+- `.throwindex <index> <optional index> <optional index>` Throws grenade of provided position(s) from your grenade thrown history. Example: `.throwindex 1 2` will throw your 1st and 2nd grenade. `.throwindex 4 5 8 9` will throw your 4th, 5th, 8th and 9th grenade (If you've added delay in grenades, they'll be thrown with their specific delay).
+- `.lastindex` Prints index number of your last thrown grenade.
+- `.rethrowsmoke` Throws your last thrown smoke grenade.
+- `.rethrownade` Throws your last thrown HE grenade.
+- `.rethrowflash` Throws your last thrown flash.
+- `.rethrowmolotov` Throws your last thrown molotov.
+- `.rethrowdecoy` Throws your last thrown decoy.
 
 # Admin Commands
 
@@ -40,6 +56,7 @@ Most of the commands can also be used using ! prefix instead of . (like !ready)
 - `.forcepause` Pauses the match as an admin (Players cannot unpause the admin-paused match). (`.fp` for shorter command)
 - `.forceunpause` Force unpauses the match. (`.fup` for shorter command)
 - `.restore <round>` Restores the backup of provided round number.
+- `.skipveto` / `.sv` Skips the current veto phase.
 - `.roundknife` / `.rk` Toggles the knife round. If disabled, match will directly go from Warmup phase to Live phase.
 - `.playout` Toggles playout (If playout is enabled, all rounds would be played irrespective of winner. Useful in scrims!)
 - `.whitelist` Toggles whitelisting of players. To whitelist a player, add the steam64id in `cfg/MatchZy/whitelist.cfg`

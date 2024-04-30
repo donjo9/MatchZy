@@ -34,17 +34,20 @@ namespace MatchZy
             if (isStopCommandAvailable && isMatchLive) {
                 if (IsHalfTimePhase())
                 {
-                    ReplyToUserCommand(player, "You cannot use this command during halftime.");
+                    // ReplyToUserCommand(player, "You cannot use this command during halftime.");
+                    ReplyToUserCommand(player, Localizer["matchzy.backup.stopduringhalftime"]);
                     return;
                 }
                 if (IsPostGamePhase())
                 {
-                    ReplyToUserCommand(player, "You cannot use this command after the game has ended.");
+                    // ReplyToUserCommand(player, "You cannot use this command after the game has ended.");
+                    ReplyToUserCommand(player, Localizer["matchzy.backup.stopmatchended"]);
                     return;
                 }
                 if (IsTacticalTimeoutActive())
                 {
-                    ReplyToUserCommand(player, "You cannot use this command when tactical timeout is active.");
+                    // ReplyToUserCommand(player, "You cannot use this command when tactical timeout is active.");
+                    ReplyToUserCommand(player, Localizer["matchzy.backup.stoptacticaltimeout"]);
                     return;
                 }
                 string stopTeamName = "";
@@ -74,7 +77,8 @@ namespace MatchZy
                     }
 
                 } else {
-                    Server.PrintToChatAll($"{chatPrefix} {ChatColors.Green}{stopTeamName}{ChatColors.Default} wants to restore the game to the beginning of the current round. {ChatColors.Green}{remainingStopTeam}{ChatColors.Default}, please write !stop to confirm.");
+                    PrintToAllChat(Localizer["matchzy.restore.teamwantstorestore", stopTeamName, remainingStopTeam]);
+                    // Server.PrintToChatAll($"{chatPrefix} {ChatColors.Green}{stopTeamName}{ChatColors.Default} wants to restore the game to the beginning of the current round. {ChatColors.Green}{remainingStopTeam}{ChatColors.Default}, please write !stop to confirm.");
                 }
             }
         }
@@ -87,7 +91,8 @@ namespace MatchZy
                     HandleRestoreCommand(player, commandArg);
                 }
                 else {
-                    ReplyToUserCommand(player, $"Usage: !restore <round>");
+                    // ReplyToUserCommand(player, $"Usage: !restore <round>");
+                    ReplyToUserCommand(player, Localizer["matchzy.cc.usage", "!restore <round>"]);
                 }                
             } else {
                 SendPlayerNotAdminMessage(player);
@@ -108,32 +113,38 @@ namespace MatchZy
                     RestoreRoundBackup(player, requiredBackupFileName, round);
                 }
                 else {
-                    ReplyToUserCommand(player, $"Invalid value for restore command. Please specify a valid non-negative number. Usage: !restore <round>");
+                    // ReplyToUserCommand(player, $"Invalid value for restore command. Please specify a valid non-negative number. Usage: !restore <round>");
+                    ReplyToUserCommand(player, Localizer["matchzy.backup.restoreinvalidvalue"]);
                 }
             }
             else {
-                ReplyToUserCommand(player, $"Usage: !restore <round>");
+                // ReplyToUserCommand(player, $"Usage: !restore <round>");
+                ReplyToUserCommand(player, Localizer["matchzy.cc.usage", "!restore <round>"]);
             }
         }
 
         private void RestoreRoundBackup(CCSPlayerController? player, string fileName, string round="") {
             if (IsHalfTimePhase())
             {
-                ReplyToUserCommand(player, "You cannot load a backup during halftime.");
+                // ReplyToUserCommand(player, "You cannot load a backup during halftime.");
+                ReplyToUserCommand(player, Localizer["matchzy.backup.restoreduringhalftime"]);
                 return;
             }
             if (IsPostGamePhase())
             {
-                ReplyToUserCommand(player, "You cannot use this command after the game has ended.");
+                // ReplyToUserCommand(player, "You cannot use this command after the game has ended.");
+                ReplyToUserCommand(player, Localizer["matchzy.backup.restorematchended"]);
                 return;
             }
             if (IsTacticalTimeoutActive())
             {
-                ReplyToUserCommand(player, "You cannot use this command when tactical timeout is active.");
+                // ReplyToUserCommand(player, "You cannot use this command when tactical timeout is active.");
+                ReplyToUserCommand(player, Localizer["matchzy.backup.restoretacticaltimeout"]);
                 return;
             }
             if (!File.Exists(Path.Join(Server.GameDirectory + "/csgo/", fileName))) {
-                ReplyToUserCommand(player, $"Backup file {fileName} does not exist, please make sure you are restoring a valid backup.");
+                // ReplyToUserCommand(player, $"Backup file {fileName} does not exist, please make sure you are restoring a valid backup.");
+                ReplyToUserCommand(player, Localizer["matchzy.backup.restoredoesntexist", fileName]);
                 return;
             }
             var gameRules = Utilities.FindAllEntitiesByDesignerName<CCSGameRulesProxy>("cs_gamerules").First().GameRules!;
@@ -144,10 +155,8 @@ namespace MatchZy
 
             Server.ExecuteCommand($"mp_backup_restore_load_file {fileName}");
 
-            (int t1score, int t2score) = GetTeamsScore();
-
             if (round == "") {
-                round = (t1score + t2score).ToString("D2");
+                round = GetRoundNumer().ToString("D2");
             }
 
             string matchZyBackupFileName = $"matchzy_data_backup_{liveMatchId}_{matchConfig.CurrentMapNumber}_round_{round}.json";
@@ -203,7 +212,7 @@ namespace MatchZy
                 Log($"[RestoreRoundBackup FATAL] Required backup data file does not exist! File: {filePath}");
             }
 
-            Server.PrintToChatAll($"{chatPrefix} Backup file restored successfully: {fileName}");
+            PrintToAllChat(Localizer["matchzy.restore.restoredsuccessfully", fileName]);
             if (pauseAfterRoundRestore) {
                 Server.ExecuteCommand("mp_pause_match;");
                 stopData["ct"] = false;
@@ -221,8 +230,7 @@ namespace MatchZy
             if (!isMatchLive) return;
             try
             {
-                (int t1score, int t2score) = GetTeamsScore();
-                string round = (t1score + t2score).ToString("D2");
+                string round = GetRoundNumer().ToString("D2");
                 string matchZyBackupFileName = $"matchzy_data_backup_{liveMatchId}_{matchConfig.CurrentMapNumber}_round_{round}.json";
                 string filePath = Server.GameDirectory + "/csgo/MatchZyDataBackup/" + matchZyBackupFileName;
                 string? directoryPath = Path.GetDirectoryName(filePath);
